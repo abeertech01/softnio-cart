@@ -4,6 +4,8 @@
 
 This project is a responsive and interactive website for browsing and purchasing band wear items. Built with React and Tailwind CSS, it allows users to select products of different colors, add them to a cart, and proceed to checkout.
 
+**Live Preview: https://bandwear-abeer.netlify.app/**
+
 ## Features
 
 - **Product Display:** Showcase various band wear items with options to view different colors.
