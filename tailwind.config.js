@@ -9,7 +9,7 @@ export default {
       colors: {
         primary: "#364A63",
         gray: "#8091A7",
-        indigo: "#6576FF",
+        purple: "#6576FF",
         lightGray: "#DBDFEA",
       },
     },

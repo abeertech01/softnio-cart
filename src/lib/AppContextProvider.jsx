@@ -19,15 +19,15 @@ const initialState = {
       price: 99,
     },
   ],
-  currentBandColor: "indigo",
+  currentBandColor: "purple",
   productColors: [
-    { name: "indigo", hex: "#816BFF" },
+    { name: "purple", hex: "#816BFF" },
     { name: "cyan", hex: "#1FCEC9" },
     { name: "blue", hex: "#4B97D3" },
     { name: "black", hex: "#3B4747" },
   ],
   cart: [],
-  total: 0,
+  isCartModalOpen: false,
 }
 
 // 2. Define reducer function
@@ -37,6 +37,16 @@ function appReducer(state, action) {
       return {
         ...state,
         cart: [...state.cart, action.payload],
+      }
+    case "INCREMENT_QNT":
+      return {
+        ...state,
+        cart: state.cart.map((item) =>
+          item.color === action.payload.color &&
+          item.size === action.payload.size
+            ? { ...item, qnt: item.qnt + action.payload.qnt }
+            : item
+        ),
       }
     case "REMOVE_FROM_CART":
       return {
@@ -48,10 +58,10 @@ function appReducer(state, action) {
         ...state,
         currentBandColor: action.payload,
       }
-    case "GET_TOTAL_PRICE":
+    case "TOGGLE_CART_MODAL":
       return {
         ...state,
-        total: state.cart.reduce((acc, item) => acc + item.price, 0),
+        isCartModalOpen: !state.isCartModalOpen,
       }
     default:
       return state
@@ -75,8 +85,12 @@ function AppContextProvider({ children }) {
     dispatch({ type: "CHANGE_BAND_COLOR", payload: color })
   }
 
-  const getTotalPrice = () => {
-    dispatch({ type: "GET_TOTAL_PRICE" })
+  const toggleCartModal = () => {
+    dispatch({ type: "TOGGLE_CART_MODAL" })
+  }
+
+  const incrementQnt = (product) => {
+    dispatch({ type: "INCREMENT_QNT", payload: product })
   }
 
   return (
@@ -86,7 +100,8 @@ function AppContextProvider({ children }) {
         addToCart,
         removeFromCart,
         changeBandColor,
-        getTotalPrice,
+        toggleCartModal,
+        incrementQnt,
       }}
     >
       {children}

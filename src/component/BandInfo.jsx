@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import filledStar from "../assets/icons/star-fill.svg"
 import halfFilledStar from "../assets/icons/star-half-fill.svg"
 import star from "../assets/icons/star.svg"
 import { AppContext } from "../lib/AppContextProvider"
 
 function BandInfo() {
-  const { state, changeBandColor, addToCart } = useContext(AppContext)
+  const { state, changeBandColor, addToCart, incrementQnt } =
+    useContext(AppContext)
   const [selectedProduct, setSelectedProduct] = useState(
     state.productsBySize[1]
   )
@@ -13,6 +14,10 @@ function BandInfo() {
     state.productColors[0].name
   )
   const [qnt, setQnt] = useState(0)
+
+  useEffect(() => {
+    setQnt(0)
+  }, [selectedColor])
 
   const bandColorSelecting = (prodColName) => {
     setSelectedColor(prodColName)
@@ -28,15 +33,27 @@ function BandInfo() {
 
   const addingToCart = () => {
     if (qnt > 0) {
-      console.log(qnt)
-      const product = {
-        qnt,
-        color: selectedColor,
-        size: selectedProduct.size,
-        price: selectedProduct.price,
-      }
+      const record = state.cart.find(
+        (item) =>
+          item.color === selectedColor && item.size === selectedProduct.size
+      )
 
-      addToCart(product)
+      if (record) {
+        incrementQnt({
+          color: selectedColor,
+          size: selectedProduct.size,
+          qnt: qnt,
+        })
+      } else {
+        const product = {
+          qnt,
+          color: selectedColor,
+          size: selectedProduct.size,
+          price: selectedProduct.price,
+        }
+
+        addToCart(product)
+      }
     }
 
     setQnt(0)
@@ -60,8 +77,10 @@ function BandInfo() {
 
       {/* Price */}
       <div className="band-price text-[1.25rem] leading-[1.875rem] mb-[1.25rem]">
-        <span className="line-through text-gray">$99</span>{" "}
-        <span className="text-indigo font-bold">
+        <span className="line-through text-gray">
+          ${selectedProduct.price + 20}
+        </span>{" "}
+        <span className="text-purple font-bold">
           ${selectedProduct.price}.00
         </span>
       </div>
@@ -188,7 +207,7 @@ function BandInfo() {
         </div>
         <button
           onClick={addingToCart}
-          className="bg-indigo text-white text-sm font-bold px-6 py-3 rounded-[3px]"
+          className="bg-purple text-white text-sm font-bold px-6 py-3 rounded-[3px]"
         >
           Add to Cart
         </button>

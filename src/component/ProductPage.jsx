@@ -5,14 +5,17 @@ import { AppContext } from "../lib/AppContextProvider"
 import CartModal from "./CartModal"
 
 function ProductPage() {
-  const { state } = useContext(AppContext)
+  const { state, toggleCartModal } = useContext(AppContext)
   return (
     <div className="flex gap-x-[3.75rem] max-w-[82.5rem]">
-      <CartModal />
+      {state.isCartModalOpen && <CartModal />}
       <BandImg />
       <BandInfo />
       {state.cart.length > 0 && (
-        <button className="fixed bottom-4 left-1/2 -translate-x-[50%] w-[139px] h-[42px] bg-[#f2c94c] rounded-full shadow-md hover:bg-[#e0b73a] transition duration-200 ">
+        <button
+          onClick={() => toggleCartModal()}
+          className="fixed bottom-4 left-1/2 -translate-x-[50%] w-[139px] h-[42px] bg-[#f2c94c] rounded-full shadow-md hover:bg-[#e0b73a] transition duration-200 "
+        >
           <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-base font-medium text-[#2c3e50]">
             Checkout
           </span>
